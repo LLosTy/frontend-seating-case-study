@@ -2,6 +2,7 @@ import {Button} from "@/components/ui/button.tsx";
 import axios from 'axios';
 import {AxiosError, AxiosResponse} from "axios";
 import {useEffect, useState} from "react";
+import * as url from "url";
 
 //TODO Move the API to .env
 
@@ -32,12 +33,19 @@ export const EventInfo = () => {
         setDescription(newDescription)
     }
 
+    const [headerImageUrl, setHeaderImageUrl] = useState<string>("")
+
+    const handleSetHeaderImageUrl = (newHeaderImageUrl: string) => {
+        setHeaderImageUrl(newHeaderImageUrl);
+    }
+
     useEffect(() => {
         axios.get('https://nfctron-frontend-seating-case-study-2024.vercel.app/event')
             .then((response: AxiosResponse) => {
                 // handleSetEventId(response.data.eventId)
                 handleSetNamePub(response.data.namePub)
                 handleSetDescription(response.data.description)
+                handleSetHeaderImageUrl(response.data.headerImageUrl)
             })
             .catch((error: AxiosError) => {
                 console.error('Error fetching data:', error);
@@ -47,7 +55,9 @@ export const EventInfo = () => {
     return (
         <aside className="w-full max-w-sm bg-white rounded-md shadow-sm p-3 flex flex-col gap-2">
             {/* event header image placeholder */}
-            <div className="bg-zinc-100 rounded-md h-32"/>
+            {/*TODO make the image display better even with the master card logo*/}
+            <img src={headerImageUrl} className={"bg-zinc-100 rounded-md h-32 object-cover"}/>
+
             {/* event name */}
             <h1 className="text-xl text-zinc-900 font-semibold">{namePub}</h1>
             {/* event description */}
